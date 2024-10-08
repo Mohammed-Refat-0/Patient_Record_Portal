@@ -32,12 +32,14 @@ const pastSurgerySchema = new mongoose.Schema({
 const scansSchema = new mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
-  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "File" }
+  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "fs.files" }
 });
 
 // sub-schema for labs
 const labsSchema = new mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
-  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "File" }
+  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "fs.files" }
 });
+
+export { weightDateSchema, diagnosisSchema, medicationSchema, pastSurgerySchema, scansSchema, labsSchema };

@@ -29,7 +29,7 @@ const patientSchema = new mongoose.Schema(
       chroniciIlnesses: { type: [String] },
       disabilities: { type: [String] },
       diagnoses: { type: [diagnosisSchema] },
-      scans: { type: { scansSchema } },
+      scans: { type: [scansSchema] },
       labs: { type: [labsSchema] },
     },
   },
