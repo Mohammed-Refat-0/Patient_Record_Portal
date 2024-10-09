@@ -3,7 +3,7 @@
 import mongoose from "mongoose";
 
 // sub-schema for weight-date pairs
-const weightDateSchema = new mongoose.Schema({
+const weightSchema = new mongoose.Schema({
   weight: { type: Number, required: true },
   date: { type: Date, required: true }
 });
@@ -42,4 +42,4 @@ const labsSchema = new mongoose.Schema({
   file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "fs.files" }
 });
 
-export { weightDateSchema, diagnosisSchema, medicationSchema, pastSurgerySchema, scansSchema, labsSchema };
+export { weightSchema, diagnosisSchema, medicationSchema, pastSurgerySchema, scansSchema, labsSchema };

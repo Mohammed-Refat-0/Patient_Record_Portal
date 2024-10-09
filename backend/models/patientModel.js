@@ -3,7 +3,7 @@
 import mongoose from "mongoose";
 import Admin from "./adminModel.js";
 import {
-  weightDateSchema, diagnosisSchema, medicationSchema,
+  weightSchema, diagnosisSchema, medicationSchema,
   pastSurgerySchema, scansSchema, labsSchema
 } from "./subschemas.js";
 
@@ -21,7 +21,7 @@ const patientSchema = new mongoose.Schema(
     medicalInfo:
     {
       bloodType: { type: String },
-      weight: { type: [weightDateschema] },
+      weight: { type: [weightSchema] },
       height: { type: Number },
       allergies: { type: [String] },
       pastSurgeries: { type: [pastSurgerySchema] },
