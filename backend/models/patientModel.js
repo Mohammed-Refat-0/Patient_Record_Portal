@@ -10,7 +10,8 @@ import {
 const patientSchema = new mongoose.Schema(
   {
     _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     nationalId: { type: String, required: true, unique: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: Admin },

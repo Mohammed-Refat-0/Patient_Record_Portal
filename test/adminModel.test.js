@@ -19,6 +19,7 @@ describe('Admin Model Test', () => {
   it('should create & save an admin successfully', async () => {
     const adminData = {
       name: 'Admin Name',
+      username: 'Admin Name',
       password: 'password123',
       nationalId: '1234567890'
     };
@@ -32,7 +33,7 @@ describe('Admin Model Test', () => {
   });
 
   it('should fail to create an admin without required fields', async () => {
-    const adminWithoutRequiredField = new Admin({ name: 'Adminn' });
+    const adminWithoutRequiredField = new Admin({ username: 'Adminn' });
     let err;
     try {
       await adminWithoutRequiredField.save();
@@ -46,7 +47,8 @@ describe('Admin Model Test', () => {
 
   it('should expect an error when saving an admin with a pre-saved nationalId', async () => {
     const duplicateadmin = new Admin({
-      name: 'Admmmin',
+      name: 'Admin',
+      username: 'Admmmin',
       password: 'password123',
       nationalId: '1234567890'
     });

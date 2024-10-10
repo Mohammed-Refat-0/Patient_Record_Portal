@@ -5,7 +5,8 @@ import Admin from "./adminModel.js";
 
 const hcpSchema = new mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   nationalId: { type: String, required: true, unique: true },
   title: { type: String, required: true },

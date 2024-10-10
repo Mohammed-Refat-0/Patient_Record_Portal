@@ -15,6 +15,7 @@ describe('Hcp Model Test', () => {
 
     const admin = new Admin({
       name: 'Admin2',
+      username: 'admin2',
       password: 'password123',
       nationalId: '1245690'
     });
@@ -28,6 +29,7 @@ describe('Hcp Model Test', () => {
   it('should create & save an Hcp successfully', async () => {
     const hcp = new Hcp({
       name: 'mohammed',
+      username: 'mohammed',
       password: 'password123',
       nationalId: '1234567890',
       title: 'Doctor',
@@ -41,7 +43,7 @@ describe('Hcp Model Test', () => {
   });
 
   it('should fail to create a hcp without required fields', async () => {
-    const hcp2 = new Hcp({ name: 'Name' });
+    const hcp2 = new Hcp({ username: 'Name' });
     let err;
     try {
       await hcp2.save();
@@ -54,9 +56,10 @@ describe('Hcp Model Test', () => {
     expect(err.errors.title).toBeDefined();
   });
 
-  it('should expect an error when saving an Hcp with a pre-saved name', async () => {
+  it('should expect an error when saving an Hcp with a pre-saved username', async () => {
     const hcp = new Hcp({
-      name: 'mohammed',
+      name: 'a',
+      username: 'mohammed',
       password: 'password123',
       nationalId: '0987541',
       title: 'Doctor',

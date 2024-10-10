@@ -16,6 +16,7 @@ describe('Patient Model Test', () => {
 
     const admin = new Admin({
       name: 'Admin1',
+      username: 'Admin1',
       password: 'password123',
       nationalId: '12345890'
     });
@@ -23,7 +24,8 @@ describe('Patient Model Test', () => {
 
     // Create and save a patient for reference
     const patientData = {
-      name: 'Patient',
+      name: 'Patient Name',
+      username: 'Patient',
       password: 'password123',
       nationalId: '123457890',
       createdBy: savedAdmin._id,
@@ -56,6 +58,7 @@ describe('Patient Model Test', () => {
   it('should create & save a patient successfully', async () => {
     const patientData = {
       name: 'Patient Name',
+      username: 'Patient Name',
       password: 'password123',
       nationalId: '0987654321',
       createdBy: savedAdmin._id,
@@ -91,7 +94,7 @@ describe('Patient Model Test', () => {
   });
 
   it('should fail to create a patient without required fields', async () => {
-    const patientWithoutRequiredField = new Patient({ name: 'Patien' });
+    const patientWithoutRequiredField = new Patient({ username: 'Patien' });
     let err;
     try {
       await patientWithoutRequiredField.save();
@@ -108,7 +111,8 @@ describe('Patient Model Test', () => {
   it('should expect an error when saving a patient with a pre-saved _id', async () => {
     const duplicatePatient = new Patient({
       _id: savedPatientId,
-      name: 'Another Patient',
+      name: 'dsds',
+      username: 'Another Patient',
       password: 'password123',
       nationalId: '09854322',
       gender: 'Male',
