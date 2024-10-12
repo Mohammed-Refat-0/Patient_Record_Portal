@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.post('/login', loginAdmin);
-router.post('/logout', logoutAdmin);
+router.post('/logout', protectAdmin, logoutAdmin);
 router.post('/createhcp', protectAdmin, createHcp);
 router.get('/gethcp', protectAdmin, getHcp);
 router.delete('/deletehcp', protectAdmin, deleteHcp);

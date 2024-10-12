@@ -25,7 +25,7 @@ const loginAdmin = async (req, res) => {
     }
     const admin = await Admin.findOne({ username });
     if (!admin) {
-      return res.status(404).json({ message: "Admin not found" });
+      return res.status(404).json({ message: "Invalid credentials" });
     }
     if (password !== admin.password) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -38,7 +38,7 @@ const loginAdmin = async (req, res) => {
 };
 
 //post /api/admin/logout
-// @access Public
+// @access Private
 // @desc logout admin
 const logoutAdmin = (req, res) => {
   try {
