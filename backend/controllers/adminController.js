@@ -105,17 +105,14 @@ const createHcp = async (req, res) => {
   }
 };
 
-// GET /api/admin/gethcp
+// GET /api/admin/gethcp?username=<username>
 // @acess Private
 // @desc get HCP
 const getHcp = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({ message: "Request body is required" });
-    }
-    const { username } = req.body;
+    const { username } = req.query;
     if (!username) {
-      return res.status(400).json({ message: "username is required" });
+      return res.status(400).json({ message: "username is required in url" });
     }
     const hcp = await Hcp.findOne({ username });
     if (!hcp) {
@@ -133,17 +130,14 @@ const getHcp = async (req, res) => {
   }
 };
 
-// DELETE /api/admin/deltethcp
+// DELETE /api/admin/deltethcp?username=<username>
 // @acess Private
 // @desc delete HCP
 const deleteHcp = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({ message: "Request body is required" });
-    }
-    const { username } = req.body;
+    const { username } = req.query;
     if (!username) {
-      return res.status(400).json({ message: "username is required" });
+      return res.status(400).json({ message: "username is required in url" });
     }
     const hcp = await Hcp.findOneAndDelete({ username });
     if (!hcp) {
@@ -195,7 +189,7 @@ const createPatient = async (req, res) => {
 
     const dateOfBirthRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
     if (!dateOfBirthRegex.test(dateOfBirth)) {
-      return res.status(400).json({ message: "Invalid date of birth format. Use day-month-year." });
+      return res.status(400).json({ message: "Invalid date of birth format. Use dd-mm-yyyy." });
     }
 
     const [day, month, year] = dateOfBirth.split('-');
@@ -224,17 +218,15 @@ const createPatient = async (req, res) => {
   }
 };
 
-// GET /api/admin/getpatient
+// GET /api/admin/getpatient?username=<username>
 // @acess Private
 // @desc get patient
 const getPatient = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({ message: "Request body is required" });
-    }
-    const { username } = req.body;
+
+    const { username } = req.query;
     if (!username) {
-      return res.status(400).json({ message: "username is required" });
+      return res.status(400).json({ message: "username is required in url" });
     }
     const patient = await Patient.findOne({ username });
     if (!patient) {
@@ -251,17 +243,14 @@ const getPatient = async (req, res) => {
   }
 };
 
-// DELETE /api/admin/deletepatient
+// DELETE /api/admin/deletepatient?username=<username>
 // @acess Private
 // @desc delete patient
 const deletePatient = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({ message: "Request body is required" });
-    }
-    const { username } = req.body;
+    const { username } = req.query;
     if (!username) {
-      return res.status(400).json({ message: "username is required" });
+      return res.status(400).json({ message: "username is required in url" });
     }
     const patient = await Patient.findOneAndDelete({ username });
     if (!patient) {
