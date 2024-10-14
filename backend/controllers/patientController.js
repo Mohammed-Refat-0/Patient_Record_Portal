@@ -44,4 +44,23 @@ const logoutPatient = (req, res) => {
   }
 };
 
-export { loginPatient, logoutPatient };
+// GET /api/patient/info
+// @access Private
+// @desc get patient by username
+const patientInfo = async (req, res) => {
+  try {
+    const _id = req.patient._id;
+    if (!_id) {
+      return res.status(400).json({ message: "error fetching patient data" });
+    }
+    const patient = await Patient.findById({ _id }).select('-password');
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+    return res.status(200).json(patient);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export { loginPatient, logoutPatient, patientInfo };
