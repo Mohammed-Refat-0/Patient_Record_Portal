@@ -1,6 +1,7 @@
 // sub-schemas definitions for the models
 
 import mongoose from "mongoose";
+import File from './fileModel.js';
 
 // sub-schema for weight-date pairs
 const weightSchema = new mongoose.Schema({
@@ -32,14 +33,14 @@ const pastSurgerySchema = new mongoose.Schema({
 const scansSchema = new mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
-  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "fs.files" }
+  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "File" }
 });
 
 // sub-schema for labs
 const labsSchema = new mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
-  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "fs.files" }
+  file: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "File" }
 });
 
 export { weightSchema, diagnosisSchema, medicationSchema, pastSurgerySchema, scansSchema, labsSchema };
