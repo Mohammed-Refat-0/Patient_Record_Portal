@@ -31,7 +31,12 @@ const loginAdmin = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
     generateToken(res, admin._id, 'admin');
-    return res.status(200).json({ message: "Login successful" });
+    return res.status(200).json({
+      message: "Login successful",
+      username: admin.username,
+      name: admin.name,
+      role: 'Admin',
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
