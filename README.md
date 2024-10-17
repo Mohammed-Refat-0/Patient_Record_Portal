@@ -12,7 +12,7 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 - **File uploading and viewing capabilities**
 
 ## API documentation
-[API Postman doc Link ](https://documenter.getpostman.com/view/36369414/2sAXxWYU74)\
+[API Postman doc Link ](https://documenter.getpostman.com/view/36369414/2sAXxWYU74)
 
 ## Technologies Used
 - **Backend**: Node.js, Express, Postman
@@ -28,16 +28,15 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
    ```bash
    cd patient-record-portal
 3. ***Create a .env file and populate it with the following environment variables**:
-  PORT=5000
-  MONGODB_URI=<your-mongodb-atlas-uri>
-  JWT_SECRET=<your-secret>
+  PORT=5000 /n
+  MONGODB_URI=<your-mongodb-atlas-uri> /n
+  JWT_SECRET=<your-secret> /n
 4. **Install dependencies**:
    ```bash
    npm install
 5. **run the program**:
    ```bash
    npm run build
-   Contributing
    
 ## License
 MIT License
