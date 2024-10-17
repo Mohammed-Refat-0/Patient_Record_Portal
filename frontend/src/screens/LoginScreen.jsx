@@ -24,15 +24,23 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (userInfo) {
-      navigate('/');
+      if (userInfo.role === 'Admin') {
+        navigate('/admindashboard');
+      } else {
+        navigate('/');
+      }
     }
   }, [userInfo, navigate]);
-
+  
   const handleLogin = async (loginFunc) => {
     try {
       const userData = await loginFunc({ username, password }).unwrap();
       dispatch(setCredentials(userData));
-      navigate('/');
+      if (userData.role === 'Admin') {
+        navigate('/admindashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       toast.error(err?.data?.message || 'Login failed');
     }
