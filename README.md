@@ -5,14 +5,15 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 
 ## Features
 - **Role based authorization**:
- admin: create, search and delete healthcare providers and patients\n
-  HCP: add and view medical records of patients\n
+ admin: create, search and delete healthcare providers and patients /n
+  HCP: add and view medical records of patients/n
   patient: view medical record\n
 - **Medical Data Entry**: Add various medical data such as blood type, allergies, chronic illnesses, disabilities, diagnoses, medications, past surgeries, weight, height, scans, and lab results.
--**File uploading and viewing capabilities**
+- **File uploading and viewing capabilities**
 
 ## API documentation
-(postman)[https://documenter.getpostman.com/view/36369414/2sAXxWYU74]
+[API Postman doc Link ](https://documenter.getpostman.com/view/36369414/2sAXxWYU74)\
+
 ## Technologies Used
 - **Backend**: Node.js, Express, Postman
 - **Database**: MongoDB (Atlas)
@@ -22,7 +23,7 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 ## Installation
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Mohammed-Refat-0/Patient_Record_Portal
 2. **Navigate to the project directory**:
    ```bash
    cd patient-record-portal
