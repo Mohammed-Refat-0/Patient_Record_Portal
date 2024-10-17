@@ -3,13 +3,13 @@
 ## Description
 Patient Record Portal is a comprehensive and secure platform built using the MERN stack, designed to manage patient records efficiently. to add, update, and view patient information, ensuring seamless and accurate record-keeping.
 
-## Features
-- **Role based authorization**:
- admin: create, search and delete healthcare providers and patients /n
-  HCP: add and view medical records of patients/n
-  patient: view medical record\n
+- ## Features
+- **Role-based authorization**:
+  - **Admin**: Create, search, and delete healthcare providers and patients.
+  - **HCP**: Add and view medical records of patients.
+  - **Patient**: View medical records.
 - **Medical Data Entry**: Add various medical data such as blood type, allergies, chronic illnesses, disabilities, diagnoses, medications, past surgeries, weight, height, scans, and lab results.
-- **File uploading and viewing capabilities**
+- **File Uploading and Viewing Capabilities**
 
 ## API documentation
 [API Postman doc Link ](https://documenter.getpostman.com/view/36369414/2sAXxWYU74)
@@ -28,9 +28,10 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
    ```bash
    cd patient-record-portal
 3. ***Create a .env file and populate it with the following environment variables**:
-  PORT=5000 /n
-  MONGODB_URI=<your-mongodb-atlas-uri> /n
-  JWT_SECRET=<your-secret> /n
+   ```bash
+   PORT=5000 
+   MONGODB_URI=<your-mongodb-atlas-uri>
+   JWT_SECRET=<your-secret>
 4. **Install dependencies**:
    ```bash
    npm install
