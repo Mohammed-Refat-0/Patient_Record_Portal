@@ -140,14 +140,18 @@ const getHcp = async (req, res) => {
 // @desc delete HCP
 const deleteHcp = async (req, res) => {
   try {
-    const { username } = req.query;
+    const { username, password } = req.query;
     if (!username) {
       return res.status(400).json({ message: "username is required in url" });
     }
-    const hcp = await Hcp.findOneAndDelete({ username });
+    const hcp = await Hcp.findOne({ username });
     if (!hcp) {
       return res.status(404).json({ message: "Hcp not found" });
     }
+    if (!(bcrypt.compareSync(password, hcp.password))) {
+      return res.status(400).json({ message: "Invalid password" });
+    };
+    await Hcp.findOneAndDelete({ username })
     return res.status(200).json({ message: "Hcp deleted successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -188,7 +192,7 @@ const createPatient = async (req, res) => {
     if (!passwordRegex.test(password)) {
       return res.status(400).json({ message: "Invalid password" });
     }
-    if (gender !== 'male' || gender !== 'female') {
+    if (gender !== 'male' && gender !== 'female') {
       return res.status(400).json({ message: "gender must be 'male' or 'female'" });
     }
 
@@ -253,14 +257,18 @@ const getPatient = async (req, res) => {
 // @desc delete patient
 const deletePatient = async (req, res) => {
   try {
-    const { username } = req.query;
+    const { username, password } = req.query;
     if (!username) {
       return res.status(400).json({ message: "username is required in url" });
     }
-    const patient = await Patient.findOneAndDelete({ username });
+    const patient = await Patient.findOne({ username });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
+    if (!(bcrypt.compareSync(password, patient.password))) {
+      return res.status(400).json({ message: "Invalid password" });
+    };
+    await Patient.findOneAndDelete({ username });
     return res.status(200).json({ message: "Patient deleted successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
