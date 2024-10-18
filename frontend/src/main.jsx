@@ -17,7 +17,7 @@ import CreatehcpScreen from './screens/CreatehcpScreen.jsx';
 import AdmindashboardScreen from './screens/AdmindashboardScreen.jsx';
 import CreatePatientScreen from './screens/CreatepatientScreen.jsx';
 import DeleteScreen from './screens/DeleteScreen.jsx';
-import SearchScreen from './screens/SearchScreen';
+import SearchScreen from './screens/SearchScreen.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

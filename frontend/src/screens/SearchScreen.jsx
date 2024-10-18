@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
+import { useState } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
+import FormContainer from '../components/FormContainer';
 import { useGetPatientQuery, useGetHcpQuery } from '../slices/adminApiSlice';
+import { toast } from 'react-toastify';
 
 const SearchScreen = () => {
   const [username, setUsername] = useState('');
@@ -11,66 +13,75 @@ const SearchScreen = () => {
   const { data: patientData, error: patientError, refetch: refetchPatient } = useGetPatientQuery({ username }, { skip: searchType !== 'patient' });
   const { data: hcpData, error: hcpError, refetch: refetchHcp } = useGetHcpQuery({ username }, { skip: searchType !== 'hcp' });
 
-  useEffect(() => {
-    if (searchType === 'patient' && patientData) {
-      setSearchResult(patientData);
-    } else if (searchType === 'hcp' && hcpData) {
-      setSearchResult(hcpData);
-    } else if (searchType === 'patient' && patientError) {
-      setError(patientError.data?.message || 'An error occurred');
-    } else if (searchType === 'hcp' && hcpError) {
-      setError(hcpError.data?.message || 'An error occurred');
-    }
-  }, [searchType, patientData, hcpData, patientError, hcpError]);
-
-  const handleSearch = (type) => {
+  const handleSearch = async (type) => {
     setSearchType(type);
     setSearchResult(null);
     setError('');
 
-    if (type === 'patient') {
-      refetchPatient();
-    } else if (type === 'hcp') {
-      refetchHcp();
+    try {
+      if (type === 'patient') {
+        await refetchPatient();
+        if (patientData) {
+          setSearchResult(patientData);
+        } else if (patientError) {
+          setError(patientError.data?.message || 'Failed to fetch patient');
+        }
+      } else if (type === 'hcp') {
+        await refetchHcp();
+        if (hcpData) {
+          setSearchResult(hcpData);
+        } else if (hcpError) {
+          setError(hcpError.data?.message || 'Failed to fetch healthcare provider');
+        }
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || 'Search failed');
     }
   };
 
   return (
-    <Container>
-      <Row className='justify-content-md-center'>
-        <Col xs={12} md={6}>
-          <h1>Search</h1>
-          <Form>
-            <Form.Group controlId='username'>
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter username'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-            <Button variant='primary' className='mt-3' onClick={() => handleSearch('patient')}>
-              Search Patient
-            </Button>
-            <Button variant='secondary' className='mt-3 ms-3' onClick={() => handleSearch('hcp')}>
-              Search Healthcare Provider
-            </Button>
-          </Form>
-          {error && <Alert variant='danger' className='mt-3'>{error}</Alert>}
-          {searchResult && (
-            <div className='mt-3'>
-              <h2>Search Result</h2>
-              <p><strong>Name:</strong> {searchResult.name}</p>
-              <p><strong>Username:</strong> {searchResult.username}</p>
-              <p><strong>National ID:</strong> {searchResult.nationalId}</p>
-              {searchType === 'hcp' && <p><strong>Title:</strong> {searchResult.title}</p>}
-              {searchType === 'patient' && <p><strong>Created By:</strong> {searchResult.createdBy}</p>}
-            </div>
-          )}
-        </Col>
-      </Row>
-    </Container>
+    <FormContainer>
+      <h1>Search User</h1>
+      <Form>
+        <Form.Group className='my-2' controlId='username'>
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Enter username'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Button
+          type='button'
+          variant='primary'
+          className='mt-3 me-3'
+          onClick={() => handleSearch('patient')}
+        >
+          Search Patient
+        </Button>
+        <Button
+          type='button'
+          variant='secondary'
+          className='mt-3'
+          onClick={() => handleSearch('hcp')}
+        >
+          Search Healthcare Provider
+        </Button>
+      </Form>
+      {error && <Alert variant='danger' className='mt-3'>{error}</Alert>}
+      {searchResult && (
+        <div className='mt-3'>
+          <h2>Search Result</h2>
+          <p><strong>Name:</strong> {searchResult.name}</p>
+          <p><strong>Username:</strong> {searchResult.username}</p>
+          <p><strong>National ID:</strong> {searchResult.nationalId}</p>
+          {searchType === 'hcp' && <p><strong>Title:</strong> {searchResult.title}</p>}
+          {searchType === 'patient' && <p><strong>Created By:</strong> {searchResult.createdBy}</p>}
+        </div>
+      )}
+    </FormContainer>
   );
 };
 

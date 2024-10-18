@@ -45,8 +45,8 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getPatient: builder.query({
-      query: () => ({
-        url: `${ADMIN_URL}/getpatient`,
+      query: ({username}) => ({
+        url: `${ADMIN_URL}/getpatient?username=${username}`,
         method: 'GET',
       }),
     }),
