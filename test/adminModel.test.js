@@ -18,10 +18,10 @@ describe('Admin Model Test', () => {
 
   it('should create & save an admin successfully', async () => {
     const adminData = {
-      name: 'Admin Name',
-      username: 'Admin Name',
-      password: 'password123',
-      nationalId: '1234567890'
+      name: 'admin',
+      username: 'admin',
+      password: 'admin',
+      nationalId: '111111111111111'
     };
     const validAdmin = new Admin(adminData);
     const savedAdmin = await validAdmin.save();
@@ -50,7 +50,7 @@ describe('Admin Model Test', () => {
       name: 'Admin',
       username: 'Admmmin',
       password: 'password123',
-      nationalId: '1234567890'
+      nationalId: '111111111111111'
     });
 
     let err;
