@@ -18,8 +18,13 @@ export const patientApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    // Add other patient-related endpoints here
+    getPatientFromPatient: builder.query({
+      query: () => ({
+        url: `${PATIENT_URL}/info`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useLoginPatientMutation, useLogoutPatientMutation } = patientApiSlice;
+export const { useLoginPatientMutation, useLogoutPatientMutation, useGetPatientFromPatientQuery } = patientApiSlice;
