@@ -18,6 +18,7 @@ import AdmindashboardScreen from './screens/AdmindashboardScreen.jsx';
 import CreatePatientScreen from './screens/CreatepatientScreen.jsx';
 import DeleteScreen from './screens/DeleteScreen.jsx';
 import SearchScreen from './screens/SearchScreen.jsx';
+import PatientDashboardScreen from './screens/PatientdashboardScreen.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path='/createpatient' element={<CreatePatientScreen />} />
       <Route path='/delete' element={<DeleteScreen />} />
       <Route path='/search' element={<SearchScreen />} />
+      <Route path='/patientdashboard' element={<PatientDashboardScreen />} />
     </Route>
   )
 );

@@ -38,6 +38,9 @@ const LoginScreen = () => {
       dispatch(setCredentials(userData));
       if (userData.role === 'Admin') {
         navigate('/admindashboard');
+      } 
+      else if (userData.role === 'patient') {
+        navigate('/patientdashboard');
       } else {
         navigate('/');
       }
