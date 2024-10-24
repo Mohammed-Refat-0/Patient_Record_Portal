@@ -8,6 +8,7 @@ import { useLogoutAdminMutation } from '../slices/adminApiSlice';
 import { useLogoutPatientMutation } from '../slices/patientApiSlice';
 import { useLogoutHcpMutation } from '../slices/hcpApiSlice';
 
+
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -53,6 +54,11 @@ const Header = () => {
                 <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
               </LinkContainer>
             )}
+             {userInfo.role === 'Patient' && (
+                  <LinkContainer to='/patientdashboard'>
+                    <NavDropdown.Item>Patient Dashboard</NavDropdown.Item>
+                  </LinkContainer>
+                )}
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (

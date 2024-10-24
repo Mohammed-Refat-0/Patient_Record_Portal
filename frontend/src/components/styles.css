@@ -1,0 +1,28 @@
+.text-center {
+    text-align: center;
+}
+
+.personal-info-header {
+    background-color: rgb(15, 15, 67);
+    color: white;
+}
+
+.medical-info-header {
+    background-color: rgb(86, 20, 24);
+    color: white;
+}
+
+.scrollable-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scrollable-list button {
+    margin: 0 5px;
+}
+
+.title-text-center {
+
+    color: rgb(9, 99, 9);
+}
