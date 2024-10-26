@@ -36,7 +36,7 @@ export const handleAddWeight = async (username, weight, addWeight, setShowWeight
 
 export const handleAddChronicIllness = async (username, chronicIllness, addChronicIllness, setShowChronicIllnessModal, refetch) => {
     try {
-        await addChronicIllness({ username, chronicIllness }).unwrap();
+        await addChronicIllness({ username, illness: chronicIllness }).unwrap();
         toast.success('Chronic illness added successfully');
         setShowChronicIllnessModal(false);
         refetch();
@@ -70,9 +70,9 @@ export const handleAddAllergy = async (username, allergy, addAllergy, setShowAll
     }
 };
 
-export const handleAddMedication = async (username, medication, addMedication, setShowMedicationModal, refetch) => {
+export const handleAddMedication = async (username, medication, dosage, startDate, endDate, addMedication, setShowMedicationModal, refetch) => {
     try {
-        await addMedication({ username, medication }).unwrap();
+        await addMedication({ username, medication, dosage, startDate, endDate }).unwrap();
         toast.success('Medication added successfully');
         setShowMedicationModal(false);
         refetch();
@@ -82,9 +82,9 @@ export const handleAddMedication = async (username, medication, addMedication, s
     }
 };
 
-export const handleAddPastSurgery = async (username, pastSurgery, addPastSurgery, setShowPastSurgeryModal, refetch) => {
+export const handleAddPastSurgery = async (username, pastSurgery, date, addPastSurgery, setShowPastSurgeryModal, refetch) => {
     try {
-        await addPastSurgery({ username, pastSurgery }).unwrap();
+        await addPastSurgery({ username, surgery: pastSurgery, date }).unwrap();
         toast.success('Past surgery added successfully');
         setShowPastSurgeryModal(false);
         refetch();
@@ -94,14 +94,48 @@ export const handleAddPastSurgery = async (username, pastSurgery, addPastSurgery
     }
 };
 
-export const handleAddDiagnosis = async (username, diagnosis, addDiagnosis, setShowDiagnosisModal, refetch) => {
+export const handleAddDiagnosis = async (username, diagnosis, date, addDiagnosis, setShowDiagnosisModal, refetch) => {
     try {
-        await addDiagnosis({ username, diagnosis }).unwrap();
+        await addDiagnosis({ username, diagnosis, date }).unwrap();
         toast.success('Diagnosis added successfully');
         setShowDiagnosisModal(false);
         refetch();
     } catch (error) {
         const errorMessage = error.data?.message || 'Failed to add diagnosis';
+        toast.error(errorMessage);
+    }
+};
+
+export const handleAddScan = async (username, testname, file, addScan, setShowScanModal, refetch) => {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('testname', testname);
+    formData.append('file', file);
+
+    try {
+        await addScan(formData).unwrap();
+        toast.success('Scan added successfully');
+        setShowScanModal(false);
+        refetch();
+    } catch (error) {
+        const errorMessage = error.data?.message || 'Failed to add scan';
+        toast.error(errorMessage);
+    }
+};
+
+export const handleAddLab = async (username, testname, file, addLab, setShowLabModal, refetch) => {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('testname', testname);
+    formData.append('file', file);
+
+    try {
+        await addLab(formData).unwrap();
+        toast.success('Lab added successfully');
+        setShowLabModal(false);
+        refetch();
+    } catch (error) {
+        const errorMessage = error.data?.message || 'Failed to add lab';
         toast.error(errorMessage);
     }
 };
