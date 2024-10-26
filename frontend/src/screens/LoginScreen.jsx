@@ -26,25 +26,30 @@ const LoginScreen = () => {
     if (userInfo) {
       if (userInfo.role === 'Admin') {
         navigate('/admindashboard');
-      } else if (userInfo.role === 'Patient'){
+      } else if (userInfo.role === 'Patient') {
         naviagte('/patientdashboard');
-      } 
+      } else if (userInfo.role === 'HCP') {
+        navigate('/hcpdashboard');
+      }
       else {
         navigate('/');
       }
     }
   }, [userInfo, navigate]);
-  
+
   const handleLogin = async (loginFunc) => {
     try {
       const userData = await loginFunc({ username, password }).unwrap();
       dispatch(setCredentials(userData));
       if (userData.role === 'Admin') {
         navigate('/admindashboard');
-      } 
+      }
       else if (userData.role === 'Patient') {
         navigate('/patientdashboard');
-      } else {
+      } else if (userData.role === 'HCP') {
+        navigate('/hcpdashboard');
+      }
+      else {
         navigate('/');
       }
     } catch (err) {
@@ -78,47 +83,47 @@ const LoginScreen = () => {
           ></Form.Control>
         </Form.Group>
         <Row className='mt-3'>
-  <Col>
-    <Button
-      type='button'
-      variant='primary'
-      onClick={() => handleLogin(loginAdmin)}
-      disabled={isLoading}
-      className='w-100 text-nowrap'
-    >
-      {isLoadingAdmin ? 'Loading...' : 'Login as Admin'}
-    </Button>
-  </Col>
-  <Col>
-    <Button
-      type='button'
-      variant='secondary'
-      onClick={() => handleLogin(loginHcp)}
-      disabled={isLoading}
-      className='w-100 text-nowrap'
-    >
-      {isLoadingHcp ? 'Loading...' : 'Login as Healthcare Provider'}
-    </Button>
-  </Col>
-  <Col>
-    <Button
-      type='button'
-      variant='success'
-      onClick={() => handleLogin(loginPatient)}
-      disabled={isLoading}
-      className='w-100 text-nowrap'
-    >
-      {isLoadingPatient ? 'Loading...' : 'Login as Patient'}
-    </Button>
-  </Col>
-</Row>
+          <Col>
+            <Button
+              type='button'
+              variant='primary'
+              onClick={() => handleLogin(loginAdmin)}
+              disabled={isLoading}
+              className='w-100 text-nowrap'
+            >
+              {isLoadingAdmin ? 'Loading...' : 'Login as Admin'}
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              type='button'
+              variant='secondary'
+              onClick={() => handleLogin(loginHcp)}
+              disabled={isLoading}
+              className='w-100 text-nowrap'
+            >
+              {isLoadingHcp ? 'Loading...' : 'Login as Healthcare Provider'}
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              type='button'
+              variant='success'
+              onClick={() => handleLogin(loginPatient)}
+              disabled={isLoading}
+              className='w-100 text-nowrap'
+            >
+              {isLoadingPatient ? 'Loading...' : 'Login as Patient'}
+            </Button>
+          </Col>
+        </Row>
       </Form>
 
       <Row className='py-3'>
         <Col>
-        Default Admin login credentials: <br></br>
-        Username: admin <br></br>
-        Password: admin
+          Default Admin login credentials: <br></br>
+          Username: admin <br></br>
+          Password: admin
         </Col>
       </Row>
     </FormContainer>

@@ -50,15 +50,20 @@ const Header = () => {
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
                   {userInfo.role === 'Admin' && (
-              <LinkContainer to='/admindashboard'>
-                <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
-              </LinkContainer>
-            )}
-             {userInfo.role === 'Patient' && (
-                  <LinkContainer to='/patientdashboard'>
-                    <NavDropdown.Item>Patient Dashboard</NavDropdown.Item>
-                  </LinkContainer>
-                )}
+                    <LinkContainer to='/admindashboard'>
+                      <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
+                    </LinkContainer>
+                  )}
+                  {userInfo.role === 'Patient' && (
+                    <LinkContainer to='/patientdashboard'>
+                      <NavDropdown.Item>Patient Dashboard</NavDropdown.Item>
+                    </LinkContainer>
+                  )}
+                  {userInfo.role === 'HCP' && (
+                    <LinkContainer to='/hcpdashboard'>
+                      <NavDropdown.Item>HCP Dashboard</NavDropdown.Item>
+                    </LinkContainer>
+                  )}
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (

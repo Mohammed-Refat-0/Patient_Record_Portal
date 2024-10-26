@@ -12,6 +12,11 @@
     color: white;
 }
 
+.patient-info-header {
+    background-color: rgb(86, 20, 24);
+    color: white;
+}
+
 .scrollable-list {
     display: flex;
     align-items: center;
