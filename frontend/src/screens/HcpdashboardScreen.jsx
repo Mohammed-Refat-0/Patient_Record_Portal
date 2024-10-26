@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Container, Row, Col, Card, ListGroup, Form, Button } from 'react-bootstrap';
+import '../components/styles.css';
+import ScrollableList from '../components/ScrollableList';
 import {
     useGetPatientInfoQuery,
     useAddBloodTypeMutation,
@@ -8,12 +11,11 @@ import {
     useAddAllergyMutation,
     useAddMedicationMutation,
     useAddPastSurgeryMutation,
-    useAddDiagnosisMutation
+    useAddDiagnosisMutation,
+    useAddScanMutation,
+    useAddLabMutation,
+    useGetFileByIdhcpQuery
 } from '../slices/hcpApiSlice';
-import { Container, Row, Col, Card, ListGroup, Form, Button, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import '../components/styles.css';
-import ScrollableList from '../components/ScrollableList';
 import {
     handleSearch,
     handleAddBloodType,
@@ -24,12 +26,13 @@ import {
     handleAddMedication,
     handleAddPastSurgery,
     handleAddDiagnosis,
-} from './hcphandlers';
-import { MedicationModal, PastSurgeryModal, DiagnosisModal } from '../components/Modals';
-const FileViewer = ({ fileId, fileName, fileDate }) => {
-    const [fileUrl, setFileUrl] = useState(null);
-    // Add the logic to fetch and display the file
-};
+    handleAddScan,
+    handleAddLab
+} from './Hcphandlers';
+import {
+    BloodTypeModal, WeightModal, ChronicIllnessModal, DisabilityModal, AllergyModal,
+    MedicationModal, PastSurgeryModal, DiagnosisModal, ScanModal, LabModal, FileViewerModal
+} from '../components/Modals';
 
 const HcpDashboardScreen = () => {
     const [username, setUsername] = useState('');
@@ -42,6 +45,8 @@ const HcpDashboardScreen = () => {
     const [showMedicationModal, setShowMedicationModal] = useState(false);
     const [showPastSurgeryModal, setShowPastSurgeryModal] = useState(false);
     const [showDiagnosisModal, setShowDiagnosisModal] = useState(false);
+    const [showScanModal, setShowScanModal] = useState(false);
+    const [showLabModal, setShowLabModal] = useState(false);
     const [bloodType, setBloodType] = useState('');
     const [weight, setWeight] = useState('');
     const [chronicIllness, setChronicIllness] = useState('');
@@ -50,10 +55,15 @@ const HcpDashboardScreen = () => {
     const [medication, setMedication] = useState('');
     const [pastSurgery, setPastSurgery] = useState('');
     const [diagnosis, setDiagnosis] = useState('');
+    const [dosage, setDosage] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [date, setDate] = useState('');
+    const [showFileViewerModal, setShowFileViewerModal] = useState(false);
+    const [fileId, setFileId] = useState(null);
     const { data: patientData, error, refetch } = useGetPatientInfoQuery(username, {
         skip: !search,
     });
-
 
     const [addBloodType] = useAddBloodTypeMutation();
     const [addWeight] = useAddWeightMutation();
@@ -63,6 +73,24 @@ const HcpDashboardScreen = () => {
     const [addMedication] = useAddMedicationMutation();
     const [addPastSurgery] = useAddPastSurgeryMutation();
     const [addDiagnosis] = useAddDiagnosisMutation();
+    const [addScan] = useAddScanMutation();
+    const [addLab] = useAddLabMutation();
+
+    const FileViewer = ({ fileId, fileName, fileDate }) => {
+        return (
+            <Card>
+                <Card.Body>
+                    <Card.Title>{fileName}</Card.Title>
+                    <Card.Text>
+                        <small className="text-muted">Uploaded on {new Date(fileDate).toLocaleDateString()}</small>
+                    </Card.Text>
+                    <a href={`/api/files/${fileId}`} target="_blank" rel="noopener noreferrer">
+                        View File
+                    </a>
+                </Card.Body>
+            </Card>
+        );
+    };
 
     return (
         <Container className="text-center">
@@ -86,10 +114,15 @@ const HcpDashboardScreen = () => {
                     <Col md={12}>
                         <Card>
                             <Card.Header className="patient-info-header">Patient Information</Card.Header>
+                            <ListGroup.Item><strong>Name:</strong> {patientData.name}</ListGroup.Item>
+                            <ListGroup.Item><strong>Gender:</strong> {patientData.gender}</ListGroup.Item>
+                            <ListGroup.Item><strong>Date of Birth:</strong> {new Date(patientData.dateOfBirth).toLocaleDateString()}</ListGroup.Item>
+                            <ListGroup.Item><strong>Height:</strong> {patientData.medicalInfo?.height || 'N/A'} cm</ListGroup.Item>
                             <ListGroup variant='flush'>
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <span><strong>Blood Type:</strong> {patientData.medicalInfo?.bloodType || 'N/A'}</span>
+                                        <span><strong>Blood Type:</strong></span>
+                                        <span className="mx-auto">{patientData.medicalInfo?.bloodType || 'N/A'}</span>
                                         {(!patientData.medicalInfo?.bloodType || patientData.medicalInfo?.bloodType === 'N/A') && (
                                             <Button variant="link" onClick={() => setShowBloodTypeModal(true)}>
                                                 Add Blood Type
@@ -97,10 +130,6 @@ const HcpDashboardScreen = () => {
                                         )}
                                     </div>
                                 </ListGroup.Item>
-                                <ListGroup.Item><strong>Name:</strong> {patientData.name}</ListGroup.Item>
-                                <ListGroup.Item><strong>Gender:</strong> {patientData.gender}</ListGroup.Item>
-                                <ListGroup.Item><strong>Date of Birth:</strong> {new Date(patientData.dateOfBirth).toLocaleDateString()}</ListGroup.Item>
-                                <ListGroup.Item><strong>Height:</strong> {patientData.medicalInfo?.height || 'N/A'} cm</ListGroup.Item>
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span><strong>Weight:</strong></span>
@@ -150,45 +179,6 @@ const HcpDashboardScreen = () => {
                                     </div>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <strong>Medications:</strong>
-                                    <ScrollableList
-                                        items={patientData.medicalInfo?.medications}
-                                        renderItem={(item) => `${item.medication} (${item.dosage}) from ${new Date(item.startDate).toLocaleDateString()} to ${item.endDate ? new Date(item.endDate).toLocaleDateString() : 'present'}`}
-                                    />
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <strong>Past Surgeries:</strong>
-                                    <ScrollableList
-                                        items={patientData.medicalInfo?.pastSurgeries}
-                                        renderItem={(item) => `${item.surgery} on ${new Date(item.date).toLocaleDateString()}`}
-                                    />
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <strong>Diagnoses:</strong>
-                                    <ScrollableList
-                                        items={patientData.medicalInfo?.diagnoses}
-                                        renderItem={(item) => `${item.diagnosis} on ${new Date(item.date).toLocaleDateString()}`}
-                                    />
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <strong>Scans:</strong>
-                                    <ScrollableList
-                                        items={patientData.medicalInfo?.scans}
-                                        renderItem={(item) => (
-                                            <FileViewer fileId={item.fileId} fileName={item.name} fileDate={item.date} />
-                                        )}
-                                    />
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <strong>Labs:</strong>
-                                    <ScrollableList
-                                        items={patientData.medicalInfo?.labs}
-                                        renderItem={(item) => (
-                                            <FileViewer fileId={item.fileId} fileName={item.name} fileDate={item.date} />
-                                        )}
-                                    />
-                                </ListGroup.Item>
-                                <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span><strong>Medications:</strong></span>
                                         <ScrollableList
@@ -213,7 +203,6 @@ const HcpDashboardScreen = () => {
                                         </Button>
                                     </div>
                                 </ListGroup.Item>
-
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span><strong>Diagnoses:</strong></span>
@@ -226,142 +215,101 @@ const HcpDashboardScreen = () => {
                                         </Button>
                                     </div>
                                 </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span><strong>Scans:</strong></span>
+                                        <Button variant="link" onClick={() => setShowScanModal(true)}>
+                                            Add Scan
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        {patientData?.medicalInfo?.scans?.map((item) => (
+                                            <div key={item.fileId} className="d-flex justify-content-between align-items-center">
+                                                <span>{item.name} ({item.date})</span>
+                                                <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
+                                                    View File
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <span><strong>Labs:</strong></span>
+                                        <Button variant="link" onClick={() => setShowLabModal(true)}>
+                                            Add Lab
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        {patientData?.medicalInfo?.labs?.map((item) => (
+                                            <div key={item.fileId} className="d-flex justify-content-between align-items-center">
+                                                <span>{item.name} ({item.date})</span>
+                                                <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
+                                                    View File
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ListGroup.Item>
                             </ListGroup>
                         </Card>
                     </Col>
                 </Row>
-            )}
+            )
+            }
+            <BloodTypeModal
+                show={showBloodTypeModal}
+                onHide={() => setShowBloodTypeModal(false)}
+                bloodType={bloodType}
+                setBloodType={setBloodType}
+                handleAddBloodType={() => handleAddBloodType(username, bloodType, addBloodType, setShowBloodTypeModal, refetch)}
+            />
 
-            <Modal show={showBloodTypeModal} onHide={() => setShowBloodTypeModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Blood Type</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="bloodType">
-                        <Form.Label>Blood Type</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter blood type"
-                            value={bloodType}
-                            onChange={(e) => setBloodType(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowBloodTypeModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleAddBloodType(username, bloodType, addBloodType, setShowBloodTypeModal, refetch)}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <WeightModal
+                show={showWeightModal}
+                onHide={() => setShowWeightModal(false)}
+                weight={weight}
+                setWeight={setWeight}
+                handleAddWeight={() => handleAddWeight(username, weight, addWeight, setShowWeightModal, refetch)}
+            />
 
-            <Modal show={showWeightModal} onHide={() => setShowWeightModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Weight</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="weight">
-                        <Form.Label>Weight</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter weight"
-                            value={weight}
-                            onChange={(e) => setWeight(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowWeightModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleAddWeight(username, weight, addWeight, setShowWeightModal, refetch)}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <ChronicIllnessModal
+                show={showChronicIllnessModal}
+                onHide={() => setShowChronicIllnessModal(false)}
+                chronicIllness={chronicIllness}
+                setChronicIllness={setChronicIllness}
+                handleAddChronicIllness={() => handleAddChronicIllness(username, chronicIllness, addChronicIllness, setShowChronicIllnessModal, refetch)}
+            />
 
-            <Modal show={showChronicIllnessModal} onHide={() => setShowChronicIllnessModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Chronic Illness</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="chronicIllness">
-                        <Form.Label>Chronic Illness</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter chronic illness"
-                            value={chronicIllness}
-                            onChange={(e) => setChronicIllness(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowChronicIllnessModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleAddChronicIllness(username, chronicIllness, addChronicIllness, setShowChronicIllnessModal, refetch)}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <DisabilityModal
+                show={showDisabilityModal}
+                onHide={() => setShowDisabilityModal(false)}
+                disability={disability}
+                setDisability={setDisability}
+                handleAddDisability={() => handleAddDisability(username, disability, addDisability, setShowDisabilityModal, refetch)}
+            />
 
-            <Modal show={showDisabilityModal} onHide={() => setShowDisabilityModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Disability</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="disability">
-                        <Form.Label>Disability</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter disability"
-                            value={disability}
-                            onChange={(e) => setDisability(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowDisabilityModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleAddDisability(username, disability, addDisability, setShowDisabilityModal, refetch)}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <AllergyModal
+                show={showAllergyModal}
+                onHide={() => setShowAllergyModal(false)}
+                allergy={allergy}
+                setAllergy={setAllergy}
+                handleAddAllergy={() => handleAddAllergy(username, allergy, addAllergy, setShowAllergyModal, refetch)}
+            />
 
-            <Modal show={showAllergyModal} onHide={() => setShowAllergyModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Allergy</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="allergy">
-                        <Form.Label>Allergy</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter allergy"
-                            value={allergy}
-                            onChange={(e) => setAllergy(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowAllergyModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleAddAllergy(username, allergy, addAllergy, setShowAllergyModal, refetch)}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
             <MedicationModal
                 show={showMedicationModal}
                 onHide={() => setShowMedicationModal(false)}
                 medication={medication}
                 setMedication={setMedication}
-                handleAddMedication={() => handleAddMedication(username, medication, addMedication, setShowMedicationModal, refetch)}
+                dosage={dosage}
+                setDosage={setDosage}
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                handleAddMedication={() => handleAddMedication(username, medication, dosage, startDate, endDate, addMedication, setShowMedicationModal, refetch)}
             />
 
             <PastSurgeryModal
@@ -369,7 +317,9 @@ const HcpDashboardScreen = () => {
                 onHide={() => setShowPastSurgeryModal(false)}
                 pastSurgery={pastSurgery}
                 setPastSurgery={setPastSurgery}
-                handleAddPastSurgery={() => handleAddPastSurgery(username, pastSurgery, addPastSurgery, setShowPastSurgeryModal, refetch)}
+                date={date}
+                setDate={setDate}
+                handleAddPastSurgery={() => handleAddPastSurgery(username, pastSurgery, date, addPastSurgery, setShowPastSurgeryModal, refetch)}
             />
 
             <DiagnosisModal
@@ -377,11 +327,30 @@ const HcpDashboardScreen = () => {
                 onHide={() => setShowDiagnosisModal(false)}
                 diagnosis={diagnosis}
                 setDiagnosis={setDiagnosis}
-                handleAddDiagnosis={() => handleAddDiagnosis(username, diagnosis, addDiagnosis, setShowDiagnosisModal, refetch)}
+                date={date}
+                setDate={setDate}
+                handleAddDiagnosis={() => handleAddDiagnosis(username, diagnosis, date, addDiagnosis, setShowDiagnosisModal, refetch)}
             />
-        </Container>
+
+            <ScanModal
+                show={showScanModal}
+                onHide={() => setShowScanModal(false)}
+                handleAddScan={(testname, file) => handleAddScan(username, testname, file, addScan, setShowScanModal, refetch)} // Use username state
+            />
+
+            <LabModal
+                show={showLabModal}
+                onHide={() => setShowLabModal(false)}
+                handleAddLab={(testname, file) => handleAddLab(username, testname, file, addLab, setShowLabModal, refetch)} // Use username state
+            />
+
+            <FileViewerModal
+                show={showFileViewerModal}
+                onHide={() => setShowFileViewerModal(false)}
+                fileId={fileId}
+            />
+        </Container >
     );
 };
-
 
 export default HcpDashboardScreen;

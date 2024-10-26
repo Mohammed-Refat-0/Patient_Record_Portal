@@ -80,6 +80,26 @@ export const hcpApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addScan: builder.mutation({
+      query: (formData) => ({
+        url: `${HCP_URL}/addscan`,
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    addLab: builder.mutation({
+      query: (formData) => ({
+        url: `${HCP_URL}/addlab`,
+        method: 'POST',
+        body: formData
+      })
+    }),
+    getFileByIdhcp: builder.query({
+      query: (id) => ({
+        url: `${HCP_URL}/file/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -95,4 +115,7 @@ export const {
   useAddMedicationMutation,
   useAddPastSurgeryMutation,
   useAddDiagnosisMutation,
+  useAddScanMutation,
+  useAddLabMutation,
+  useGetFileByIdhcpQuery
 } = hcpApiSlice;
