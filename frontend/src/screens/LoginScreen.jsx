@@ -26,7 +26,10 @@ const LoginScreen = () => {
     if (userInfo) {
       if (userInfo.role === 'Admin') {
         navigate('/admindashboard');
-      } else {
+      } else if (userInfo.role === 'Patient'){
+        naviagte('/patientdashboard');
+      } 
+      else {
         navigate('/');
       }
     }
@@ -39,7 +42,7 @@ const LoginScreen = () => {
       if (userData.role === 'Admin') {
         navigate('/admindashboard');
       } 
-      else if (userData.role === 'patient') {
+      else if (userData.role === 'Patient') {
         navigate('/patientdashboard');
       } else {
         navigate('/');

@@ -19,6 +19,7 @@ import CreatePatientScreen from './screens/CreatepatientScreen.jsx';
 import DeleteScreen from './screens/DeleteScreen.jsx';
 import SearchScreen from './screens/SearchScreen.jsx';
 import PatientDashboardScreen from './screens/PatientdashboardScreen.jsx';
+import HcpDashboardScreen from './screens/HcpdashboardScreen.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
       <Route path='/delete' element={<DeleteScreen />} />
       <Route path='/search' element={<SearchScreen />} />
       <Route path='/patientdashboard' element={<PatientDashboardScreen />} />
+      <Route path='/hcpdashboard' element={<HcpDashboardScreen />} />
     </Route>
   )
 );

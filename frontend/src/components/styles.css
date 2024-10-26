@@ -26,3 +26,8 @@
 
     color: rgb(9, 99, 9);
 }
+
+.file-link {
+    color: blue;
+    text-decoration: underline;
+}
