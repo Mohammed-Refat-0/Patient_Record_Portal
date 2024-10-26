@@ -24,7 +24,14 @@ export const patientApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getFile: builder.query({
+      query: (id) => ({
+        url: `/files/${id}`,
+        method: 'GET',
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
   }),
 });
 
-export const { useLoginPatientMutation, useLogoutPatientMutation, useGetPatientFromPatientQuery } = patientApiSlice;
+export const { useLoginPatientMutation, useLogoutPatientMutation, useGetPatientFromPatientQuery, useGetFileQuery } = patientApiSlice;

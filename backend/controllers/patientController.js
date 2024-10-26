@@ -3,6 +3,8 @@
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import Patient from "../models/patientModel.js";
+import File from '../models/fileModel.js';
+
 
 // Post /api/patient/login
 // @access Public
@@ -68,4 +70,26 @@ const patientInfo = async (req, res) => {
   }
 };
 
-export { loginPatient, logoutPatient, patientInfo };
+// GET /api/patient/getfile
+// @access Private
+// @desc Get file by ID
+const getFile = async (req, res) => {
+  try {
+    let id = null;
+    id = req.query.id;
+    if (!id) {
+      return res.status(400).json({ message: 'File ID is required' });
+    }
+    const file = await File.findById(id);
+
+    if (!file) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+    res.set('Content-Type', file.contentType);
+    res.send(file.data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export { loginPatient, logoutPatient, patientInfo, getFile };

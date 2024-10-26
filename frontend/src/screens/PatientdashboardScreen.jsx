@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useGetPatientFromPatientQuery } from '../slices/patientApiSlice';
+import { useGetPatientFromPatientQuery, useGetFileQuery } from '../slices/patientApiSlice';
 import { Container, Row, Col, Card, ListGroup, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import '../components/styles.css';
@@ -30,6 +30,33 @@ const ScrollableList = ({ items, renderItem }) => {
         &gt;
       </Button>
     </div>
+  );
+};
+
+const FileViewer = ({ fileId, fileName, fileDate }) => {
+  const [fileUrl, setFileUrl] = useState(null);
+  const { data: fileBlob, error } = useGetFileQuery(fileId);
+
+  useEffect(() => {
+    if (fileBlob) {
+      const url = URL.createObjectURL(fileBlob);
+      setFileUrl(url);
+      return () => URL.revokeObjectURL(url); // Clean up the URL object
+    }
+  }, [fileBlob]);
+
+  if (error) {
+    return <p>Error loading file</p>;
+  }
+
+  if (!fileBlob) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="file-link">
+      {fileName} on {new Date(fileDate).toLocaleDateString()}
+    </a>
   );
 };
 
@@ -124,14 +151,18 @@ const PatientDashboardScreen = () => {
                   <strong>Scans:</strong>
                   <ScrollableList
                     items={patientData.medicalInfo?.scans}
-                    renderItem={(item) => `${item.name} on ${new Date(item.date).toLocaleDateString()}`}
+                    renderItem={(item) => (
+                      <FileViewer fileId={item.fileId} fileName={item.name} fileDate={item.date} />
+                    )}
                   />
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <strong>Labs:</strong>
                   <ScrollableList
                     items={patientData.medicalInfo?.labs}
-                    renderItem={(item) => `${item.name} on ${new Date(item.date).toLocaleDateString()}`}
+                    renderItem={(item) => (
+                      <FileViewer fileId={item.fileId} fileName={item.name} fileDate={item.date} />
+                    )}
                   />
                 </ListGroup.Item>
               </ListGroup>
