@@ -6,7 +6,7 @@ import { protectHcp } from '../middleware/authMiddleware.js';
 import {
   loginHcp, logoutHcp, getPatient, addBloodType, addWeight, addChronicIllness,
   addDisability, addAllergy, addHeight, addDiagnosis, addMedication,
-  addPastSurgery, addScan, addLab
+  addPastSurgery, addScan, addLab, getFileById
 } from '../controllers/hcpController.js';
 
 const router = express.Router();
@@ -26,6 +26,7 @@ router.post("/addweight", protectHcp, addWeight);
 router.post("/addheight", protectHcp, addHeight);
 router.post("/addscan", protectHcp, uploadMiddleware, addScan);
 router.post("/addlab", protectHcp, uploadMiddleware, addLab);
+router.get("/file/:id", protectHcp, getFileById);
 
 
 

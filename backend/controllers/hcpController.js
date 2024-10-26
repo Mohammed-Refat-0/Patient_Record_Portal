@@ -475,7 +475,25 @@ const addLab = async (req, res) => {
   }
 }
 
+// GET /api/hcp/file/:id
+// @access Private
+// @desc get file by ID
+const getFileById = async (req, res) => {
+  try {
+    const file = await File.findById(req.params.id);
+    if (!file) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+
+    res.set('Content-Type', file.contentType);
+    res.send(file.data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 export {
   loginHcp, logoutHcp, getPatient, addBloodType, addHeight, addDisability, addChronicIllness,
-  addWeight, addAllergy, addPastSurgery, addMedication, addDiagnosis, addScan, addLab
+  addWeight, addAllergy, addPastSurgery, addMedication, addDiagnosis, addScan, addLab, getFileById
 };
