@@ -27,7 +27,7 @@ const LoginScreen = () => {
       if (userInfo.role === 'Admin') {
         navigate('/admindashboard');
       } else if (userInfo.role === 'Patient') {
-        naviagte('/patientdashboard');
+        navigate('/patientdashboard');
       } else if (userInfo.role === 'HCP') {
         navigate('/hcpdashboard');
       }
