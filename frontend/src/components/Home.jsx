@@ -15,7 +15,7 @@ const Home = () => {
             <h4>Webapp to manage patient medical records.</h4> <br></br>
             <Row className='text-start'>
               <Col xs={12}>
-                <strong>Admin:</strong> add and delete healthcare professionals and patients accounts
+                <strong>Admin:</strong> add, search, and delete healthcare professionals and patients accounts
               </Col>
               <Col xs={12}>
                 <strong>Healthcare professional:</strong> upload and view medical records of patients, such as scans, diagnoses, etc...

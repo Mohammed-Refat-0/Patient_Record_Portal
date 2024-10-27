@@ -1,5 +1,6 @@
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import '../components/styles.css'
 
 const AdmindashboardScreen = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const AdmindashboardScreen = () => {
             <Row className='mb-3'>
               <Col>
                 <Button
-                  variant='primary'
+                  variant='secondary'
                   className='w-100'
                   onClick={() => navigate('/createhcp')}
                 >

@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { useState } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { useCreateHcpMutation } from '../slices/adminApiSlice';
 import { toast } from 'react-toastify';
 
@@ -14,8 +12,6 @@ const CreatehcpScreen = () => {
   const [title, setTitle] = useState('Doctor');
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [createHcp, { isLoading }] = useCreateHcpMutation();
 
   const submitHandler = async (e) => {

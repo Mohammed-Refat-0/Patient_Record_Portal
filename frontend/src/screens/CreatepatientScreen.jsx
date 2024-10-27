@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { useCreatePatientMutation } from '../slices/adminApiSlice';
 import { toast } from 'react-toastify';
 
@@ -15,8 +13,6 @@ const CreatePatientScreen = () => {
   const [dateOfBirth, setDate] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [createPatient, { isLoading }] = useCreatePatientMutation();
 
   const submitHandler = async (e) => {

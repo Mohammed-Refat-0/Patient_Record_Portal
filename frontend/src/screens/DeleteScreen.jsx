@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
-import { useDispatch } from 'react-redux';
 import { useDeletePatientMutation, useDeleteHcpMutation } from '../slices/adminApiSlice';
 import { toast } from 'react-toastify';
 
@@ -11,7 +10,6 @@ const DeleteScreen = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  const dispatch = useDispatch();
   const [deletePatient, { isLoading: isLoadingPatient }] = useDeletePatientMutation();
   const [deleteHcp, { isLoading: isLoadingHcp }] = useDeleteHcpMutation();
 

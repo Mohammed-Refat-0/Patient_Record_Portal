@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { useGetFileByIdhcpQuery } from '../slices/hcpApiSlice';
 
 export const BloodTypeModal = ({ show, onHide, bloodType, setBloodType, handleAddBloodType }) => (
     <Modal show={show} onHide={onHide}>
@@ -55,7 +54,32 @@ export const WeightModal = ({ show, onHide, weight, setWeight, handleAddWeight }
         </Modal.Footer>
     </Modal>
 );
-
+export const HeightModal = ({ show, onHide, height, setHeight, handleAddHeight }) => (
+    <Modal show={show} onHide={onHide}>
+        <Modal.Header closeButton>
+            <Modal.Title>Add Height</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <Form.Group controlId="height">
+                <Form.Label>Height</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Enter height"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                />
+            </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="secondary" onClick={onHide}>
+                Close
+            </Button>
+            <Button variant="primary" onClick={handleAddHeight}>
+                Save Changes
+            </Button>
+        </Modal.Footer>
+    </Modal>
+);
 export const ChronicIllnessModal = ({ show, onHide, chronicIllness, setChronicIllness, handleAddChronicIllness }) => (
     <Modal show={show} onHide={onHide}>
         <Modal.Header closeButton>

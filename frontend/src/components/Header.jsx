@@ -1,5 +1,5 @@
-import { Navbar, Nav, Container, NavDropdown, Badge } from 'react-bootstrap';
-import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
+import { Navbar, Nav, Container, NavDropdown,} from 'react-bootstrap';
+import { FaSignInAlt} from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -46,9 +46,6 @@ const Header = () => {
             <Nav className='ms-auto'>
               {userInfo ? (
                 <NavDropdown title={`${userInfo.name} (${userInfo.role})`} id='username'>
-                  <LinkContainer to='/profile'>
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
-                  </LinkContainer>
                   {userInfo.role === 'Admin' && (
                     <LinkContainer to='/admindashboard'>
                       <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
