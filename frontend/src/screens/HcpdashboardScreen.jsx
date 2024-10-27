@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, ListGroup, Form, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, ListGroup, Form, Button, Modal } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import '../components/styles.css';
 import ScrollableList from '../components/ScrollableList';
 import {
@@ -31,9 +33,42 @@ import {
 } from './Hcphandlers';
 import {
     BloodTypeModal, WeightModal, ChronicIllnessModal, DisabilityModal, AllergyModal,
-    MedicationModal, PastSurgeryModal, DiagnosisModal, ScanModal, LabModal, FileViewerModal
+    MedicationModal, PastSurgeryModal, DiagnosisModal, ScanModal, LabModal
 } from '../components/Modals';
 
+const FileViewerModal = ({ show, onHide, fileId }) => {
+    const { data: fileData, error, isLoading } = useGetFileByIdhcpQuery(fileId, { skip: !fileId });
+
+    const getFileUrl = (fileData) => {
+        const blob = new Blob([fileData], { type: fileData.type });
+        return URL.createObjectURL(blob);
+    };
+
+    return (
+        <Modal show={show && fileId} onHide={onHide} size="lg">
+            <Modal.Header closeButton>
+                <Modal.Title>View File</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {isLoading && <p>Loading...</p>}
+                {error && <p className="text-danger">Failed to load file</p>}
+                {fileData && (
+                    <iframe
+                        src={getFileUrl(fileData)}
+                        title="File Viewer"
+                        width="100%"
+                        height="700px"
+                    />
+                )}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onHide}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    );
+};
 
 const HcpDashboardScreen = () => {
     const [username, setUsername] = useState('');
@@ -62,7 +97,7 @@ const HcpDashboardScreen = () => {
     const [date, setDate] = useState('');
     const [showFileViewerModal, setShowFileViewerModal] = useState(false);
     const [fileId, setFileId] = useState(null);
-    const { data: patientData, error, refetch } = useGetPatientInfoQuery(username, {
+    const { data: patientData, error, refetch, isFetching } = useGetPatientInfoQuery(username, {
         skip: !search,
     });
 
@@ -77,14 +112,19 @@ const HcpDashboardScreen = () => {
     const [addScan] = useAddScanMutation();
     const [addLab] = useAddLabMutation();
 
+    useEffect(() => {
+        if (error) {
+            toast.error(error.data?.message || 'Failed to fetch patient data');
+        }
+    }, [error]);
+
+    useEffect(() => {
+        if (search && !isFetching) {
+            refetch();
+        }
+    }, [search, isFetching, refetch]);
 
     const handleFileClick = (id) => {
-        if (!id) {
-            console.error('No file ID provided');
-            return;
-        }
-        console.log('Clicked file ID:', id); // Debugging log
-
         setFileId(id);
         setShowFileViewerModal(true);
     };
@@ -105,19 +145,6 @@ const HcpDashboardScreen = () => {
                     Search
                 </Button>
             </Form>
-            {/* Example File List */}
-            {patientData && patientData.files && (
-                <ListGroup>
-                    {patientData.files.map((file) => (
-                        <ListGroup.Item key={file.id}>
-                            {file.name}
-                            <Button variant="link" onClick={() => handleFileClick(file.id)}>
-                                View
-                            </Button>
-                        </ListGroup.Item>
-                    ))}
-                </ListGroup>
-            )}
             {error && <p className="text-danger mt-3">Patient not found</p>}
             {patientData && (
                 <Row className="mt-4">
@@ -230,12 +257,9 @@ const HcpDashboardScreen = () => {
                                         <ScrollableList
                                             items={patientData.medicalInfo?.scans}
                                             renderItem={(item) => (
-                                                <div key={item.fileId} className="d-flex justify-content-between align-items-center">
-                                                    <span>{item.name} ({item.date})</span>
-                                                    <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
-                                                        View File
-                                                    </Button>
-                                                </div>
+                                                <Button variant="link" onClick={() => handleFileClick(item.file)}>
+                                                    {item.name} on {new Date(item.date).toLocaleDateString()}
+                                                </Button>
                                             )}
                                         />
                                         <Button variant="link" onClick={() => setShowScanModal(true)}>
@@ -249,12 +273,9 @@ const HcpDashboardScreen = () => {
                                         <ScrollableList
                                             items={patientData.medicalInfo?.labs}
                                             renderItem={(item) => (
-                                                <div key={item.fileId} className="d-flex justify-content-between align-items-center">
-                                                    <span>{item.name} ({item.date})</span>
-                                                    <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
-                                                        View File
-                                                    </Button>
-                                                </div>
+                                                <Button variant="link" onClick={() => handleFileClick(item.file)}>
+                                                    {item.name} on {new Date(item.date).toLocaleDateString()}
+                                                </Button>
                                             )}
                                         />
                                         <Button variant="link" onClick={() => setShowLabModal(true)}>

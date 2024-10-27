@@ -98,7 +98,6 @@ export const hcpApiSlice = apiSlice.injectEndpoints({
       query: (id) => ({
         url: `${HCP_URL}/file/${id}`,
         method: 'GET',
-        responseHandler: 'blob'
       }),
     }),
   }),
