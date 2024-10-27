@@ -41,10 +41,6 @@ const FileViewerModal = ({ show, onHide, fileId }) => {
     return URL.createObjectURL(blob);
   };
 
-  console.log('fileId:', fileId);
-  console.log('fileData:', fileData);
-  console.log('error:', error);
-
   return (
     <Modal show={show && fileId} onHide={onHide} size="lg">
       <Modal.Header closeButton>
@@ -58,7 +54,7 @@ const FileViewerModal = ({ show, onHide, fileId }) => {
             src={getFileUrl(fileData)}
             title="File Viewer"
             width="100%"
-            height="500px"
+            height="700px"
           />
         )}
       </Modal.Body>
@@ -88,7 +84,6 @@ const PatientDashboardScreen = () => {
   }, [refetch]);
 
   const handleFileClick = (id) => {
-    console.log('Clicked file ID:', id); // Debugging log
     setFileId(id);
     setShowFileViewerModal(true);
   };
