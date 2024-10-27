@@ -38,6 +38,13 @@ export const hcpApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addHeight: builder.mutation({
+      query: (data) => ({
+        url: `${HCP_URL}/addheight`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
     addChronicIllness: builder.mutation({
       query: (data) => ({
         url: `${HCP_URL}/addchronicillness`,
@@ -117,5 +124,6 @@ export const {
   useAddDiagnosisMutation,
   useAddScanMutation,
   useAddLabMutation,
-  useGetFileByIdhcpQuery
+  useGetFileByIdhcpQuery,
+  useAddHeightMutation
 } = hcpApiSlice;

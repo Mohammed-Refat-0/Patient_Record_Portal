@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, ListGroup, Form, Button, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import '../components/styles.css';
 import ScrollableList from '../components/ScrollableList';
@@ -16,7 +15,8 @@ import {
     useAddDiagnosisMutation,
     useAddScanMutation,
     useAddLabMutation,
-    useGetFileByIdhcpQuery
+    useGetFileByIdhcpQuery,
+    useAddHeightMutation
 } from '../slices/hcpApiSlice';
 import {
     handleSearch,
@@ -29,11 +29,12 @@ import {
     handleAddPastSurgery,
     handleAddDiagnosis,
     handleAddScan,
-    handleAddLab
+    handleAddLab,
+    handleAddHeight
 } from './Hcphandlers';
 import {
     BloodTypeModal, WeightModal, ChronicIllnessModal, DisabilityModal, AllergyModal,
-    MedicationModal, PastSurgeryModal, DiagnosisModal, ScanModal, LabModal
+    MedicationModal, PastSurgeryModal, DiagnosisModal, ScanModal, LabModal, HeightModal
 } from '../components/Modals';
 
 const FileViewerModal = ({ show, onHide, fileId }) => {
@@ -83,7 +84,9 @@ const HcpDashboardScreen = () => {
     const [showDiagnosisModal, setShowDiagnosisModal] = useState(false);
     const [showScanModal, setShowScanModal] = useState(false);
     const [showLabModal, setShowLabModal] = useState(false);
+    const [showHeightModal, setShowHeightModal] = useState(false);
     const [bloodType, setBloodType] = useState('');
+    const [height, setHeight] = useState('');
     const [weight, setWeight] = useState('');
     const [chronicIllness, setChronicIllness] = useState('');
     const [disability, setDisability] = useState('');
@@ -111,6 +114,7 @@ const HcpDashboardScreen = () => {
     const [addDiagnosis] = useAddDiagnosisMutation();
     const [addScan] = useAddScanMutation();
     const [addLab] = useAddLabMutation();
+    const [addHeight] = useAddHeightMutation();
 
     useEffect(() => {
         if (error) {
@@ -155,11 +159,19 @@ const HcpDashboardScreen = () => {
                             <ListGroup.Item><strong>Gender:</strong> {patientData.gender}</ListGroup.Item>
                             <ListGroup.Item><strong>Date of Birth:</strong> {new Date(patientData.dateOfBirth).toLocaleDateString()}</ListGroup.Item>
                             <ListGroup.Item><strong>Height:</strong> {patientData.medicalInfo?.height || 'N/A'} cm</ListGroup.Item>
+                            <ListGroup.Item><strong>Blood Type:</strong> {patientData.medicalInfo?.bloodType || 'N/A'} </ListGroup.Item>
                             <ListGroup variant='flush'>
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <span><strong>Blood Type:</strong></span>
-                                        <span className="mx-auto">{patientData.medicalInfo?.bloodType || 'N/A'}</span>
+                                        {(!patientData.medicalInfo?.height || patientData.medicalInfo?.height === 'N/A') && (
+                                            <Button variant="link" onClick={() => setShowHeightModal(true)}>
+                                                Add Height
+                                            </Button>
+                                        )}
+                                    </div>
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <div className="d-flex justify-content-between align-items-center">
                                         {(!patientData.medicalInfo?.bloodType || patientData.medicalInfo?.bloodType === 'N/A') && (
                                             <Button variant="link" onClick={() => setShowBloodTypeModal(true)}>
                                                 Add Blood Type
@@ -288,6 +300,13 @@ const HcpDashboardScreen = () => {
                     </Col>
                 </Row>
             )}
+            <HeightModal
+                show={showHeightModal}
+                onHide={() => setShowHeightModal(false)}
+                height={height}
+                setHeight={setHeight}
+                handleAddHeight={() => handleAddHeight(username, height, addHeight, setShowHeightModal, refetch)}
+            />
             <BloodTypeModal
                 show={showBloodTypeModal}
                 onHide={() => setShowBloodTypeModal(false)}

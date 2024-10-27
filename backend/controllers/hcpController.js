@@ -31,7 +31,7 @@ const loginHcp = async (req, res) => {
     return res.status(200).json({
       message: "Login successful",
       username: hcp.username,
-      name: Hcp.name,
+      name: hcp.name,
       role: 'HCP',
     });
   } catch (error) {

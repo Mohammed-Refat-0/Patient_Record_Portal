@@ -22,6 +22,18 @@ export const handleAddBloodType = async (username, bloodType, addBloodType, setS
     }
 };
 
+export const handleAddHeight = async (username, height, addHeight, setShowHeightModal, refetch) => {
+    try {
+        await addHeight({ username, height }).unwrap();
+        toast.success('Height added successfully');
+        setShowHeightModal(false);
+        refetch();
+    } catch (error) {
+        const errorMessage = error.data?.message || 'Failed to add height';
+        toast.error(errorMessage);
+    }
+};
+
 export const handleAddWeight = async (username, weight, addWeight, setShowWeightModal, refetch) => {
     try {
         await addWeight({ username, weight }).unwrap();
