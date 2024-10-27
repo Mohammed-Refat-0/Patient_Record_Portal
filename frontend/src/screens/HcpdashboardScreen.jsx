@@ -34,6 +34,7 @@ import {
     MedicationModal, PastSurgeryModal, DiagnosisModal, ScanModal, LabModal, FileViewerModal
 } from '../components/Modals';
 
+
 const HcpDashboardScreen = () => {
     const [username, setUsername] = useState('');
     const [search, setSearch] = useState(false);
@@ -76,20 +77,16 @@ const HcpDashboardScreen = () => {
     const [addScan] = useAddScanMutation();
     const [addLab] = useAddLabMutation();
 
-    const FileViewer = ({ fileId, fileName, fileDate }) => {
-        return (
-            <Card>
-                <Card.Body>
-                    <Card.Title>{fileName}</Card.Title>
-                    <Card.Text>
-                        <small className="text-muted">Uploaded on {new Date(fileDate).toLocaleDateString()}</small>
-                    </Card.Text>
-                    <a href={`/api/files/${fileId}`} target="_blank" rel="noopener noreferrer">
-                        View File
-                    </a>
-                </Card.Body>
-            </Card>
-        );
+
+    const handleFileClick = (id) => {
+        if (!id) {
+            console.error('No file ID provided');
+            return;
+        }
+        console.log('Clicked file ID:', id); // Debugging log
+
+        setFileId(id);
+        setShowFileViewerModal(true);
     };
 
     return (
@@ -108,6 +105,19 @@ const HcpDashboardScreen = () => {
                     Search
                 </Button>
             </Form>
+            {/* Example File List */}
+            {patientData && patientData.files && (
+                <ListGroup>
+                    {patientData.files.map((file) => (
+                        <ListGroup.Item key={file.id}>
+                            {file.name}
+                            <Button variant="link" onClick={() => handleFileClick(file.id)}>
+                                View
+                            </Button>
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            )}
             {error && <p className="text-danger mt-3">Patient not found</p>}
             {patientData && (
                 <Row className="mt-4">
@@ -190,7 +200,6 @@ const HcpDashboardScreen = () => {
                                         </Button>
                                     </div>
                                 </ListGroup.Item>
-
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span><strong>Past Surgeries:</strong></span>
@@ -218,46 +227,46 @@ const HcpDashboardScreen = () => {
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span><strong>Scans:</strong></span>
+                                        <ScrollableList
+                                            items={patientData.medicalInfo?.scans}
+                                            renderItem={(item) => (
+                                                <div key={item.fileId} className="d-flex justify-content-between align-items-center">
+                                                    <span>{item.name} ({item.date})</span>
+                                                    <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
+                                                        View File
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        />
                                         <Button variant="link" onClick={() => setShowScanModal(true)}>
                                             Add Scan
                                         </Button>
                                     </div>
-                                    <div>
-                                        {patientData?.medicalInfo?.scans?.map((item) => (
-                                            <div key={item.fileId} className="d-flex justify-content-between align-items-center">
-                                                <span>{item.name} ({item.date})</span>
-                                                <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
-                                                    View File
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
                                 </ListGroup.Item>
-
                                 <ListGroup.Item>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span><strong>Labs:</strong></span>
+                                        <ScrollableList
+                                            items={patientData.medicalInfo?.labs}
+                                            renderItem={(item) => (
+                                                <div key={item.fileId} className="d-flex justify-content-between align-items-center">
+                                                    <span>{item.name} ({item.date})</span>
+                                                    <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
+                                                        View File
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        />
                                         <Button variant="link" onClick={() => setShowLabModal(true)}>
                                             Add Lab
                                         </Button>
-                                    </div>
-                                    <div>
-                                        {patientData?.medicalInfo?.labs?.map((item) => (
-                                            <div key={item.fileId} className="d-flex justify-content-between align-items-center">
-                                                <span>{item.name} ({item.date})</span>
-                                                <Button variant="link" onClick={() => { setFileId(item.fileId); setShowFileViewerModal(true); }}>
-                                                    View File
-                                                </Button>
-                                            </div>
-                                        ))}
                                     </div>
                                 </ListGroup.Item>
                             </ListGroup>
                         </Card>
                     </Col>
                 </Row>
-            )
-            }
+            )}
             <BloodTypeModal
                 show={showBloodTypeModal}
                 onHide={() => setShowBloodTypeModal(false)}
@@ -343,13 +352,12 @@ const HcpDashboardScreen = () => {
                 onHide={() => setShowLabModal(false)}
                 handleAddLab={(testname, file) => handleAddLab(username, testname, file, addLab, setShowLabModal, refetch)} // Use username state
             />
-
             <FileViewerModal
                 show={showFileViewerModal}
                 onHide={() => setShowFileViewerModal(false)}
                 fileId={fileId}
             />
-        </Container >
+        </Container>
     );
 };
 

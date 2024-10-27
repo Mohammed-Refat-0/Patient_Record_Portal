@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import Hcp from "../models/hcpModel.js";
 import Patient from "../models/patientModel.js";
+import File from '../models/fileModel.js';
 
 const dateRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
 
@@ -491,7 +492,6 @@ const getFileById = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 export {
   loginHcp, logoutHcp, getPatient, addBloodType, addHeight, addDisability, addChronicIllness,

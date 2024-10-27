@@ -21,7 +21,9 @@ const ScrollableList = ({ items, renderItem }) => {
             <Button variant="secondary" size="sm" onClick={handlePrev} disabled={items.length <= 1}>
                 &lt;
             </Button>
-            {renderItem(items[currentIndex])}
+            <ListGroup.Item key={items[currentIndex].fileId || currentIndex}>
+                {renderItem(items[currentIndex])}
+            </ListGroup.Item>
             <Button variant="secondary" size="sm" onClick={handleNext} disabled={items.length <= 1}>
                 &gt;
             </Button>

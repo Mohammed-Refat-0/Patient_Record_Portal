@@ -349,8 +349,18 @@ export const LabModal = ({ show, onHide, handleAddLab }) => {
     );
 };
 
+
 export const FileViewerModal = ({ show, onHide, fileId }) => {
-    const { data: fileData, error } = useGetFileByIdhcpQuery(fileId, { skip: !fileId });
+    const { data: fileData, error, isLoading } = useGetFileByIdhcpQuery(fileId, { skip: !fileId });
+
+    const getFileUrl = (fileData) => {
+        const blob = new Blob([fileData], { type: fileData.type });
+        return URL.createObjectURL(blob);
+    };
+
+    console.log('fileId:', fileId);
+    console.log('fileData:', fileData);
+    console.log('error:', error);
 
     return (
         <Modal show={show} onHide={onHide} size="lg">
@@ -358,14 +368,22 @@ export const FileViewerModal = ({ show, onHide, fileId }) => {
                 <Modal.Title>View File</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {isLoading && <p>Loading...</p>}
                 {error && <p className="text-danger">Failed to load file</p>}
                 {fileData && (
-                    <iframe
-                        src={URL.createObjectURL(new Blob([fileData]))}
-                        title="File Viewer"
-                        width="100%"
-                        height="500px"
-                    />
+                    <>
+                        <h4>File Details:</h4>
+                        <p>Type: {fileData.type}</p>
+                        <p>Size: {fileData.size} bytes</p>
+                        <hr />
+                        <h4>File Content:</h4>
+                        <embed
+                            src={getFileUrl(fileData)}
+                            type={fileData.type}
+                            width="100%"
+                            height="500px"
+                        />
+                    </>
                 )}
             </Modal.Body>
             <Modal.Footer>
