@@ -26,9 +26,8 @@ export const patientApiSlice = apiSlice.injectEndpoints({
     }),
     getFile: builder.query({
       query: (id) => ({
-        url: `/files/${id}`,
+        url: `${PATIENT_URL}/getfile/?id=${id}`,
         method: 'GET',
-        responseHandler: (response) => response.blob(),
       }),
     }),
   }),

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetPatientFromPatientQuery, useGetFileQuery } from '../slices/patientApiSlice';
-import { Container, Row, Col, Card, ListGroup, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import '../components/styles.css';
 
@@ -33,36 +33,49 @@ const ScrollableList = ({ items, renderItem }) => {
   );
 };
 
-const FileViewer = ({ fileId, fileName, fileDate }) => {
-  const [fileUrl, setFileUrl] = useState(null);
-  const { data: fileBlob, error } = useGetFileQuery(fileId);
+const FileViewerModal = ({ show, onHide, fileId }) => {
+  const { data: fileData, error, isLoading } = useGetFileQuery(fileId, { skip: !fileId });
 
-  useEffect(() => {
-    if (fileBlob) {
-      const url = URL.createObjectURL(fileBlob);
-      setFileUrl(url);
-      return () => URL.revokeObjectURL(url); // Clean up the URL object
-    }
-  }, [fileBlob]);
+  const getFileUrl = (fileData) => {
+    const blob = new Blob([fileData], { type: fileData.type });
+    return URL.createObjectURL(blob);
+  };
 
-  if (error) {
-    return <p>Error loading file</p>;
-  }
-
-  if (!fileBlob) {
-    return <p>Loading...</p>;
-  }
+  console.log('fileId:', fileId);
+  console.log('fileData:', fileData);
+  console.log('error:', error);
 
   return (
-    <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="file-link">
-      {fileName} on {new Date(fileDate).toLocaleDateString()}
-    </a>
+    <Modal show={show && fileId} onHide={onHide} size="lg">
+      <Modal.Header closeButton>
+        <Modal.Title>View File</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {isLoading && <p>Loading...</p>}
+        {error && <p className="text-danger">Failed to load file</p>}
+        {fileData && (
+          <iframe
+            src={getFileUrl(fileData)}
+            title="File Viewer"
+            width="100%"
+            height="500px"
+          />
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onHide}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
 const PatientDashboardScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const { data: patientData, error, refetch } = useGetPatientFromPatientQuery();
+  const [showFileViewerModal, setShowFileViewerModal] = useState(false);
+  const [fileId, setFileId] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -73,6 +86,12 @@ const PatientDashboardScreen = () => {
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  const handleFileClick = (id) => {
+    console.log('Clicked file ID:', id); // Debugging log
+    setFileId(id);
+    setShowFileViewerModal(true);
+  };
 
   return (
     <Container className="text-center">
@@ -152,7 +171,9 @@ const PatientDashboardScreen = () => {
                   <ScrollableList
                     items={patientData.medicalInfo?.scans}
                     renderItem={(item) => (
-                      <FileViewer fileId={item.fileId} fileName={item.name} fileDate={item.date} />
+                      <Button variant="link" onClick={() => handleFileClick(item.file)}>
+                        {item.name} on {new Date(item.date).toLocaleDateString()}
+                      </Button>
                     )}
                   />
                 </ListGroup.Item>
@@ -161,7 +182,9 @@ const PatientDashboardScreen = () => {
                   <ScrollableList
                     items={patientData.medicalInfo?.labs}
                     renderItem={(item) => (
-                      <FileViewer fileId={item.fileId} fileName={item.name} fileDate={item.date} />
+                      <Button variant="link" onClick={() => handleFileClick(item.file)}>
+                        {item.name} on {new Date(item.date).toLocaleDateString()}
+                      </Button>
                     )}
                   />
                 </ListGroup.Item>
@@ -172,6 +195,12 @@ const PatientDashboardScreen = () => {
       ) : (
         <p>Loading...</p>
       )}
+
+      <FileViewerModal
+        show={showFileViewerModal}
+        onHide={() => setShowFileViewerModal(false)}
+        fileId={fileId}
+      />
     </Container>
   );
 };
