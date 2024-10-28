@@ -3,6 +3,11 @@
 ## Description
 Patient Record Portal is a comprehensive and secure platform built using the MERN stack, designed to manage patient records efficiently. to add, update, and view patient information, ensuring seamless and accurate record-keeping.
 
+## Screenshoots
+![Patient Dashboard](images/patient_dashboard.png)
+![Lab file viewing](images/file_viewing.png)
+![Admin dashboard](images/admin_dashboard.png)
+
 - ## Features
 - **Role-based authorization**:
   - **Admin**: Create, search, and delete healthcare providers and patients.
