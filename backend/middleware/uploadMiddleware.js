@@ -32,7 +32,7 @@ const uploadMiddleware = (req, res, next) => {
     }
 
     try {
-      const { testname, labname } = req.body;
+      const { testname } = req.body;
       if (!testname) {
         return res.status(400).json({ message: 'testname is required' });
       }
