@@ -44,8 +44,8 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
    npm install
 5. **Build frontend static files from the frontend directory **
    ```bash
-     cd fronted
-     npm run build
+   cd fronted
+   npm run build
 5. **run the program**:
    ```bash
    cd ..
