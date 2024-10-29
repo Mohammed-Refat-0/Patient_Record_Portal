@@ -8,12 +8,12 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 ![Lab file viewing](images/file_viewing.png)
 ![Admin dashboard](images/admin_dashboard.png)
 
-- ## Features
+## Features
 - **Role-based authorization**:
   - **Admin**: Create, search, and delete healthcare providers and patients.
   - **HCP**: Add and view medical records of patients.
   - **Patient**: View medical records.
-- **Medical Data Entry**: Add various medical data such as blood type, allergies, chronic illnesses, disabilities, diagnoses, medications, past surgeries, weight, height, scans, and lab results.
+- **Medical Data Entry**: Add various medical data such as blood-type, diagnoses, medications, past surgeries, weight, scans, lab results, etc...
 - **File Uploading and Viewing Capabilities**
 
 ## API documentation
@@ -23,7 +23,8 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 - **Backend**: Node.js, Express, Postman
 - **Database**: MongoDB (Atlas)
 - **Database Modeling**: Mongoose
-- **Frontend**: React, vite, redux toolkit
+- **Frontend**: React, vite
+- **libraries**: jwt, Redux-toolkit, multer, etc...
   
 ## Installation
 1. **Clone the repository**:
@@ -34,15 +35,21 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
    cd patient-record-portal
 3. ***Create a .env file and populate it with the following environment variables**:
    ```bash
+   NODE_ENV=production
    PORT=5000 
    MONGODB_URI=<your-mongodb-atlas-uri>
    JWT_SECRET=<your-secret>
 4. **Install dependencies**:
    ```bash
    npm install
+5. **Build frontend static files from the frontend directory **
+   ```bash
+   cd fronted
+   npm run build
 5. **run the program**:
    ```bash
-   npm run build
+   cd ..
+   npm run server
    
 ## License
 MIT License
