@@ -33,7 +33,7 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 2. **Navigate to the project directory**:
    ```bash
    cd patient-record-portal
-3. ***Create a .env file and populate it with the following environment variables**:
+3. **Create a .env file in the project root directory and populate it with the following environment variables**:
    ```bash
    NODE_ENV=production
    PORT=5000 
@@ -45,6 +45,7 @@ Patient Record Portal is a comprehensive and secure platform built using the MER
 5. **Build frontend static files from the frontend directory **
    ```bash
    cd fronted
+   npm install
    npm run build
 5. **run the program**:
    ```bash
